@@ -1,0 +1,45 @@
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# AWS credentials (never commit)
+.aws/
+*.pem
+
+### Maven / Java ###
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.iml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IDEs ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.swp
+.vscode/
+*.DS_Store
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+

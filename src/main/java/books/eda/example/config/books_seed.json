@@ -1,0 +1,73 @@
+{
+  "book_list": [
+    {
+      "PutRequest": {
+        "Item": {
+          "bookId": {"S": "1"},
+          "title": {"S": "Effective Java Third Edition"},
+          "author": {"S": "Joshua Bloch"},
+          "publisher": {"S": "Addison-Wesley Professional"},
+          "publicationDate": {"S": "December 27, 2017"},
+          "pageCount": {"N": "416"},
+          "weightUom": {"S": "Pounds"},
+          "weight": {"N": "1.5"},
+          "sizeUom": {"S": "Inches"},
+          "dimensions": {"S": "7.4 x 0.9 x 9"},
+          "isbn": {"S": "0134685997"},
+          "language": {"S": "English"},
+          "price": {"N": "37.67"},
+          "owner": {"NULL": true},
+          "type": {"S": "HARDCOVER"},
+          "status": {"S": "AVAILABLE"},
+          "condition": {"S": "NEW"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "bookId": {"S": "2"},
+          "title": {"S": "Learn React Hooks"},
+          "author": {"S": "Daniel Bugl"},
+          "publisher": {"S": "Packt Publishing"},
+          "publicationDate": {"S": "May 23, 2025"},
+          "pageCount": {"N": "372"},
+          "weightUom": {"S": "Pounds"},
+          "weight": {"N": "1.41"},
+          "sizeUom": {"S": "Inches"},
+          "dimensions": {"S": "7.5 x 0.84 x 9.25"},
+          "isbn": {"S": "1836209177"},
+          "language": {"S": "English"},
+          "price": {"N": "35.99"},
+          "owner": {"NULL": true},
+          "type": {"S": "PAPERBACK"},
+          "status": {"S": "AVAILABLE"},
+          "condition": {"S": "LIKE_NEW"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "bookId": {"S": "3"},
+          "title": {"S": "JavaScript: The Definitive Guide: Master the World's Most-Used Programming Language 7th Edition"},
+          "author": {"S": "David Flanagan"},
+          "publisher": {"S": "O'Reilly Media"},
+          "publicationDate": {"S": "May 14, 2020"},
+          "pageCount": {"N": "708"},
+          "weightUom": {"S": "Pounds"},
+          "weight": {"N": "1.21"},
+          "sizeUom": {"S": "Inches"},
+          "dimensions": {"S": "6.5 x 0.64 x 8.33"},
+          "isbn": {"S": "1491951996"},
+          "language": {"S": "English"},
+          "price": {"N": "32.58"},
+          "owner": {"NULL": true},
+          "type": {"S": "HARDCOVER"},
+          "status": {"S": "AVAILABLE"},
+          "condition": {"S": "NEW"}
+        }
+      }
+    }
+  ]
+}
