@@ -1,0 +1,36 @@
+services:
+
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /data"
+    environment:
+      - AWS_ACCESS_KEY_ID=fakeMyKeyId
+      - AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+    volumes:
+      - dynamodb-data:/data
+    healthcheck:
+      #test: ["CMD-SHELL", "nc -z localhost 8000 || exit 1"]
+      test: ["CMD", "java", "-jar", "DynamoDBLocal.jar", "-sharedDb", "-info"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+      start_period: 5s
+
+  book-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: book-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+
+volumes:
+  dynamodb-data:

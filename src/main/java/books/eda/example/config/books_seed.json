@@ -19,7 +19,8 @@
           "owner": {"NULL": true},
           "type": {"S": "HARDCOVER"},
           "status": {"S": "AVAILABLE"},
-          "condition": {"S": "NEW"}
+          "condition": {"S": "NEW"},
+          "askingPrice": {"N": "0.0"}
         }
       }
     },
@@ -42,7 +43,8 @@
           "owner": {"NULL": true},
           "type": {"S": "PAPERBACK"},
           "status": {"S": "AVAILABLE"},
-          "condition": {"S": "LIKE_NEW"}
+          "condition": {"S": "LIKE_NEW"},
+          "askingPrice": {"N": "0.0"}
         }
       }
     },
@@ -65,7 +67,8 @@
           "owner": {"NULL": true},
           "type": {"S": "HARDCOVER"},
           "status": {"S": "AVAILABLE"},
-          "condition": {"S": "NEW"}
+          "condition": {"S": "NEW"},
+          "askingPrice": {"N": "0.0"}
         }
       }
     }

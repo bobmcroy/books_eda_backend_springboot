@@ -8,37 +8,11 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 @DynamoDbBean
 public class Book {
 
-    public enum BookWeightUOM {
-        OUNCES,
-        POUNDS,
-        KILOGRAMS
-    }
-
-    public enum BookSizeUOM {
-        INCHES,
-        FEET,
-        MILLIMETERS,
-        CENTIMETERS
-    }
-
-    public enum BookMediaType {
-        EBOOK,
-        PAPERBACK,
-        HARDCOVER
-    }
-
-    public enum BookStatus {
-        AVAILABLE,
-        CHECKED_OUT,
-        SOLD
-    }
-
-    public enum BookCondition {
-        NEW,
-        LIKE_NEW,
-        USED,
-        DAMAGED
-    }
+    public enum BookWeightUOM {OUNCES, POUNDS, KILOGRAMS}
+    public enum BookSizeUOM {INCHES, FEET, MILLIMETERS, CENTIMETERS}
+    public enum BookMediaType {EBOOK, PAPERBACK, HARDCOVER}
+    public enum BookStatus {AVAILABLE, CHECKED_OUT, SOLD}
+    public enum BookCondition {NEW, LIKE_NEW, USED, DAMAGED}
 
     private String bookId;
     private String title;
@@ -179,7 +153,7 @@ public class Book {
         this.condition = condition;
     }
 
-    public double setAskingPrice() {
+    public double getAskingPrice() {
         return askingPrice;
     }
     public void setAskingPrice(double askingPrice) {

@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BooksEdaExampleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BooksEdaExampleApplication.class, args);
+		// Set the Spring profile to "local" to pick up your application-local.properties
+        System.setProperty("spring.profiles.active", "local");
+        SpringApplication.run(BooksEdaExampleApplication.class, args);
 	}
 
 }
