@@ -2,6 +2,8 @@ package books.eda.example.service;
 
 import books.eda.example.model.Book;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
@@ -20,9 +22,15 @@ public class BookService {
     private final DynamoDbTable<Book> bookTable;
 
     public BookService() {
+        // 🔹 Connect to DynamoDB Local via Docker Compose service name
         DynamoDbClient client = DynamoDbClient.builder()
+                .endpointOverride(URI.create("http://dynamodb-local:8000"))
+                .credentialsProvider(
+                        StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create("fakeMyKeyId", "fakeSecretAccessKey")
+                        )
+                )
                 .region(Region.US_EAST_1)
-                .endpointOverride(URI.create("http://localhost:8000"))
                 .build();
 
         this.enhancedClient = DynamoDbEnhancedClient.builder()
@@ -32,12 +40,10 @@ public class BookService {
         this.bookTable = enhancedClient.table("book_list", TableSchema.fromBean(Book.class));
     }
 
-    // 🔹 Optional: Seed local DynamoDB with initial books
+    // 🔹 Seed local DynamoDB only if empty
     @PostConstruct
     public void initData() {
-        if (bookTable.scan().items().iterator().hasNext()) {
-            return; // already seeded
-        }
+        if (bookTable.scan().items().iterator().hasNext()) return; // Already seeded
 
         List<Book> books = new ArrayList<>();
 
@@ -79,6 +85,7 @@ public class BookService {
         b2.setCondition(Book.BookCondition.LIKE_NEW);
         books.add(b2);
 
+        // 🔹 Persist books
         for (Book book : books) {
             bookTable.putItem(book);
         }
@@ -91,7 +98,7 @@ public class BookService {
         return list;
     }
 
-    // 🔹 Helper to get book by ID
+    // 🔹 Helper: get by ID
     private Book getBookById(String bookId) {
         Book key = new Book();
         key.setBookId(bookId);

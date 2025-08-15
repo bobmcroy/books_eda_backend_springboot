@@ -5,7 +5,7 @@ import books.eda.example.service.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class DataSeedInitializer implements CommandLineRunner {
 
     private final BookService bookService;
