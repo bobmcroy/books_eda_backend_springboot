@@ -46,14 +46,14 @@ public class BookController {
     @PostMapping("/buy")
     public Book buyBook(@RequestBody BuyRequest request) {
         System.out.println("Buy called: " + request);
-        return bookService.buyBook(request.getBookId(), request.getBuyer());
+        return bookService.buyBook(request.getBookId(), request.getBuyer(), request.getOfferedPrice());
     }
 
     // 🔹 Return a book
     @PostMapping("/return")
     public Book returnBook(@RequestBody ReturnRequest request) {
         System.out.println("Return called: " + request);
-        return bookService.returnBook(request.getBookId());
+        return bookService.returnBook(request.getBookId(), request.getOwner());
     }
 
     // 🔹 Sell a book
