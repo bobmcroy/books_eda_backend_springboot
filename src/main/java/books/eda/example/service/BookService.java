@@ -1,7 +1,10 @@
 package books.eda.example.service;
 
 import books.eda.example.model.Book;
+import books.eda.example.dto.BookEvent;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -14,6 +17,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClientBuilder;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -32,29 +36,32 @@ public class BookService {
     private final String returnTopicArn;
     private final String sellTopicArn;
     private final String listTopicArn;
+    private final boolean directDynamoUpdates;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     // -----------------------------------------
-
     public BookService(
-        @Value("${app.dynamo.primaryRegion}") String primaryRegion,
-        @Value("${app.dynamo.secondaryRegion:}") String secondaryRegion,
-        @Value("${app.dynamo.tableName}") String tableName,
-        @Value("${DYNAMO_ENDPOINT:}") String dynamoEndpoint,
-        @Value("${app.sns.checkoutTopicArn}") String checkoutTopicArn,
-        @Value("${app.sns.buyTopicArn}") String buyTopicArn,
-        @Value("${app.sns.returnTopicArn}") String returnTopicArn,
-        @Value("${app.sns.sellTopicArn}") String sellTopicArn,
-        @Value("${app.sns.listTopicArn}") String listTopicArn
+            @Value("${app.dynamo.primaryRegion:useast-1}") String primaryRegion,
+            @Value("${app.dynamo.secondaryRegion:us-west-2}") String secondaryRegion,
+            @Value("${app.dynamo.tableName:book_list}") String tableName,
+            @Value("${DYNAMO_ENDPOINT:}") String dynamoEndpoint,
+            @Value("${app.sns.checkoutTopicArn:}") String checkoutTopicArn,
+            @Value("${app.sns.buyTopicArn:}") String buyTopicArn,
+            @Value("${app.sns.returnTopicArn:}") String returnTopicArn,
+            @Value("${app.sns.sellTopicArn:}") String sellTopicArn,
+            @Value("${app.sns.listTopicArn:}") String listTopicArn,
+            @Value("${app.direct-dynamo-updates:false}") boolean directDynamoUpdates
     ) {
-        DynamoDbClient client;
+        this.directDynamoUpdates = directDynamoUpdates;
 
+        // ---------- DynamoDB Client ----------
+        DynamoDbClient client;
         try {
             client = createClient(primaryRegion, dynamoEndpoint);
-            client.listTables(); // optional: only if you want connectivity check
+            client.listTables(); // optional connectivity check
         } catch (Exception e) {
             if (secondaryRegion != null && !secondaryRegion.isBlank()) {
                 client = createClient(secondaryRegion, dynamoEndpoint);
-                // optional: client.listTables();
             } else {
                 throw new RuntimeException("Failed to connect to primary DynamoDB region and no secondary defined", e);
             }
@@ -63,11 +70,9 @@ public class BookService {
         this.enhancedClient = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(client)
                 .build();
-
         this.bookTable = enhancedClient.table(tableName, TableSchema.fromBean(Book.class));
 
-        // SNS always uses primary region
-        // SNS client always points to primary region
+        // ---------- SNS Client ----------
         this.snsClient = SnsClient.builder()
                 .region(Region.of(primaryRegion))
                 .credentialsProvider(DefaultCredentialsProvider.create())
@@ -80,7 +85,7 @@ public class BookService {
         this.listTopicArn = listTopicArn;
     }
 
-    // Helper method for building client with optional endpoint
+    // ---------- Helper to create DynamoDbClient ----------
     private DynamoDbClient createClient(String region, String endpoint) {
         DynamoDbClientBuilder builder = DynamoDbClient.builder()
                 .credentialsProvider(DefaultCredentialsProvider.create());
@@ -99,13 +104,16 @@ public class BookService {
         List<Book> list = new ArrayList<>();
         bookTable.scan().items().forEach(list::add);
         publishEvent(listTopicArn, "LIST", null, null, null);
+
+        if (directDynamoUpdates) {
+            // any direct processing logic here
+        }
+
         return list;
     }
 
     public boolean tableIsEmpty() {
-        PageIterable<Book> pages = bookTable.scan(
-                ScanEnhancedRequest.builder().limit(1).build()
-        );
+        PageIterable<Book> pages = bookTable.scan(ScanEnhancedRequest.builder().limit(1).build());
         return pages.stream()
                 .findFirst()
                 .map(p -> !p.items().iterator().hasNext())
@@ -113,6 +121,9 @@ public class BookService {
     }
 
     // ---------- Mutations ----------
+    public boolean isDirectDynamoUpdates() {
+        return directDynamoUpdates;
+    }
     public void saveBook(Book book) {
         bookTable.putItem(book);
     }
@@ -127,8 +138,103 @@ public class BookService {
         book.setTitle(title);
         book.setAuthor(author);
         book.setStatus(Book.BookStatus.AVAILABLE);
+
         saveBook(book);
+        publishEvent(listTopicArn, "CREATE", book, null, null);
+
         return book;
+    }
+
+    // ---------- Business Operations ----------
+    public Book checkoutBook(String bookId, String owner) {
+        Book book = getBookById(bookId);
+        if (book.getStatus() != Book.BookStatus.AVAILABLE)
+            throw new RuntimeException("Book not available for checkout");
+
+        book.setStatus(Book.BookStatus.CHECKED_OUT);
+        book.setOwner(owner);
+
+        if (directDynamoUpdates) {
+            saveBook(book); // sync mode: write now
+        } else {
+            // async mode: publish only
+            publishEvent(checkoutTopicArn, "CHECKOUT", book, owner, null);
+        }
+        return book;
+    }
+
+    public Book buyBook(String bookId, String buyer, Double offeredPrice) {
+        Book book = getBookById(bookId);
+        if (book.getStatus() != Book.BookStatus.AVAILABLE)
+            throw new RuntimeException("Book not available for purchase");
+        book.setStatus(Book.BookStatus.SOLD);
+        book.setOwner(buyer);
+        book.setAskingPrice(offeredPrice);
+
+        if (directDynamoUpdates) {
+            saveBook(book);
+        } else {
+            publishEvent(buyTopicArn, "BUY", book, buyer, offeredPrice);
+        }
+        return book;
+    }
+
+    public Book returnBook(String bookId, String owner) {
+        Book book = getBookById(bookId);
+        book.setStatus(Book.BookStatus.AVAILABLE);
+        book.setOwner(null);
+
+        if (directDynamoUpdates) {
+            saveBook(book);
+        } else {
+            publishEvent(returnTopicArn, "RETURN", book, owner, null);
+        }
+        return book;
+    }
+
+    public Book sellBook(String bookId, String seller, double askingPrice) {
+        Book book = getBookById(bookId);
+        book.setStatus(Book.BookStatus.AVAILABLE);
+        book.setOwner(null);
+        book.setAskingPrice(askingPrice);
+
+        if (directDynamoUpdates) {
+            saveBook(book);
+        } else {
+            publishEvent(sellTopicArn, "SELL", book, seller, askingPrice);
+        }
+        return book;
+    }
+
+    // ===== Event-apply methods (listeners call these; ALWAYS persist) =====
+    public void applyCheckoutEvent(BookEvent e) {
+        Book b = getBookById(e.getBookId());
+        b.setStatus(Book.BookStatus.CHECKED_OUT);
+        b.setOwner(e.getActor());
+        saveBook(b);
+    }
+
+    public void applyBuyEvent(BookEvent e) {
+        Book b = getBookById(e.getBookId());
+        b.setStatus(Book.BookStatus.SOLD);
+        b.setOwner(e.getActor());
+        b.setAskingPrice(e.getOfferedPrice());
+        saveBook(b);
+    }
+
+    public void applyReturnEvent(BookEvent e) {
+        Book b = getBookById(e.getBookId());
+        b.setStatus(Book.BookStatus.AVAILABLE);
+        b.setOwner(null);
+        saveBook(b);
+    }
+
+    public void applySellEvent(BookEvent e) {
+        Book b = getBookById(e.getBookId());
+        b.setStatus(Book.BookStatus.AVAILABLE);
+        b.setOwner(null);
+        b.setAskingPrice(e.getOfferedPrice());
+        saveBook(b);
     }
 
     // ---------- Helpers ----------
@@ -149,55 +255,26 @@ public class BookService {
                 actor != null ? actor : "",
                 offeredPrice != null ? offeredPrice.toString() : "null"
         );
+
         snsClient.publish(PublishRequest.builder()
                 .topicArn(topicArn)
                 .message(message)
                 .build());
     }
 
-    // ---------- Business Ops ----------
-    public Book checkoutBook(String bookId, String owner) {
-        Book book = getBookById(bookId);
-        if (book.getStatus() != Book.BookStatus.AVAILABLE)
-            throw new RuntimeException("Book not available for checkout");
-        book.setStatus(Book.BookStatus.CHECKED_OUT);
-        book.setOwner(owner);
-        saveBook(book);
-
-        publishEvent(checkoutTopicArn, "CHECKOUT", book, owner, null);
-        return book;
+    public Book setCoverUrlKey(String bookId, String coverUrlKey) {
+        Book b = getBookById(bookId);
+        b.setCoverUrlKey(coverUrlKey);
+        // optionally also clear direct URL if you prefer one source of truth
+        // b.setImageUrl(null);
+        saveBook(b);
+        return b;
     }
 
-    public Book buyBook(String bookId, String buyer, Double offeredPrice) {
-        Book book = getBookById(bookId);
-        if (book.getStatus() != Book.BookStatus.AVAILABLE)
-            throw new RuntimeException("Book not available for purchase");
-        book.setStatus(Book.BookStatus.SOLD);
-        book.setOwner(buyer);
-        saveBook(book);
-
-        publishEvent(buyTopicArn, "BUY", book, buyer, offeredPrice);
-        return book;
-    }
-
-    public Book returnBook(String bookId, String owner) {
-        Book book = getBookById(bookId);
-        book.setStatus(Book.BookStatus.AVAILABLE);
-        book.setOwner(null);
-        saveBook(book);
-
-        publishEvent(returnTopicArn, "RETURN", book, owner, null);
-        return book;
-    }
-
-    public Book sellBook(String bookId, String seller, double askingPrice) {
-        Book book = getBookById(bookId);
-        book.setStatus(Book.BookStatus.AVAILABLE);
-        book.setOwner(null);
-        book.setAskingPrice(askingPrice);
-        saveBook(book);
-
-        publishEvent(sellTopicArn, "SELL", book, seller, askingPrice);
-        return book;
+    public Book setCoverUrl(String bookId, String coverUrl) {
+        Book b = getBookById(bookId);
+        b.setCoverUrl(coverUrl);
+        saveBook(b);
+        return b;
     }
 }

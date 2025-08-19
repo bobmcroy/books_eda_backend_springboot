@@ -2,6 +2,7 @@ package books.eda.example.model;
 
 import java.util.Objects;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
@@ -32,6 +33,8 @@ public class Book {
     private BookStatus status;
     private BookCondition condition;
     private double askingPrice = 0.0;
+    private String coverUrl;
+    private String coverUrlKey;
 
     @DynamoDbPartitionKey
     public String getBookId() {
@@ -160,6 +163,24 @@ public class Book {
         this.askingPrice = askingPrice;
     }
 
+    @DynamoDbAttribute("coverUrl")
+    public String getCoverUrl() { 
+        return coverUrl; 
+    }
+
+    public void setCoverUrl(String coverUrl) { 
+        this.coverUrl = coverUrl; 
+    }
+
+    @DynamoDbAttribute("coverUrlKey")
+    public String getCoverUrlKey() { 
+        return coverUrlKey; 
+    }
+
+    public void setCoverUrlKey(String coverUrlKey) { 
+        this.coverUrlKey = coverUrlKey; 
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -181,6 +202,8 @@ public class Book {
                ", status=" + status +
                ", condition=" + condition +
                ", askingPrice=" + askingPrice +
+               ", coverUrl='" + coverUrl + '\'' +
+               ", coverUrlKey='" + coverUrlKey + '\'' +
                '}';
     }
 
@@ -206,12 +229,14 @@ public class Book {
                 status == book.status &&
                 type == book.type &&
                 condition == book.condition &&
-                Double.compare(book.askingPrice, askingPrice) == 0;
+                Double.compare(book.askingPrice, askingPrice) == 0 &&
+                Objects.equals(coverUrl, book.coverUrl) &&
+                Objects.equals(coverUrlKey, book.coverUrlKey);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(bookId, title, author, publisher, publicationDate, weightUom, weight, pageCount, 
-        sizeUom, dimensions, isbn, language, price, owner, status, type, condition, askingPrice);
+        sizeUom, dimensions, isbn, language, price, owner, status, type, condition, askingPrice, coverUrl, coverUrlKey);
     }
 }
