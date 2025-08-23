@@ -1,0 +1,482 @@
+{
+  "bookId": {
+    "S": "1"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Joshua Bloch"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": ""
+  },
+  "coverUrlKey": {
+    "S": ""
+  },
+  "dimensions": {
+    "S": "7.4 x 0.9 x 9"
+  },
+  "isbn": {
+    "S": "0134685997"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "416"
+  },
+  "price": {
+    "N": "37.67"
+  },
+  "publicationDate": {
+    "S": "December 27, 2017"
+  },
+  "publisher": {
+    "S": "Addison-Wesley Professional"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "Effective Java Third Edition"
+  },
+  "type": {
+    "S": "HARDCOVER"
+  },
+  "weight": {
+    "S": "1.5"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "2"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Daniel Bugl"
+  },
+  "condition": {
+    "S": "LIKE_NEW"
+  },
+  "coverUrl": {
+    "S": ""
+  },
+  "coverUrlKey": {
+    "S": ""
+  },
+  "dimensions": {
+    "S": "7.5 x 0.84 x 9.25"
+  },
+  "isbn": {
+    "S": "1836209177"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "372"
+  },
+  "price": {
+    "N": "35.99"
+  },
+  "publicationDate": {
+    "S": "May 23, 2025"
+  },
+  "publisher": {
+    "S": "Packt Publishing"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "Learn React Hooks"
+  },
+  "type": {
+    "S": "PAPERBACK"
+  },
+  "weight": {
+    "S": "1.41"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "3"
+  },
+  "askingPrice": {
+    "N": "22.5"
+  },
+  "author": {
+    "S": "David Flanagan"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": ""
+  },
+  "coverUrlKey": {
+    "S": ""
+  },
+  "dimensions": {
+    "S": "6.5 x 0.64 x 8.33"
+  },
+  "isbn": {
+    "S": "1491951996"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "708"
+  },
+  "price": {
+    "N": "32.58"
+  },
+  "publicationDate": {
+    "S": "May 14, 2020"
+  },
+  "publisher": {
+    "S": "O'Reilly Media"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "JavaScript: The Definitive Guide: Master the World's Most-Used Programming Language 7th Edition"
+  },
+  "type": {
+    "S": "HARDCOVER"
+  },
+  "weight": {
+    "S": "1.21"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "4"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Shane Hammond; Marcus Sloss"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": "https://d1yas6jiqzshv2.cloudfront.net/covers/4/cover.png"
+  },
+  "coverUrlKey": {
+    "S": "covers/4/cover.png"
+  },
+  "dimensions": {
+    "S": "7.5 x 0.84 x 9.25"
+  },
+  "isbn": {
+    "S": "1836209177"
+  },
+  "language": {
+    "S": "English"
+  },
+  "owner": {
+    "S": "bob"
+  },
+  "pageCount": {
+    "N": "279"
+  },
+  "price": {
+    "N": "27.78"
+  },
+  "publicationDate": {
+    "S": "May 23, 2025"
+  },
+  "publisher": {
+    "S": "Packt Publishing"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "Dungeon Heros"
+  },
+  "type": {
+    "S": "PAPERBACK"
+  },
+  "weight": {
+    "S": "1.41"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "5"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Bruce Sentar"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": "https://d1yas6jiqzshv2.cloudfront.net/covers/5/cover.png"
+  },
+  "coverUrlKey": {
+    "S": "covers/5/cover.png"
+  },
+  "dimensions": {
+    "S": "7.4 x 0.9 x 9"
+  },
+  "isbn": {
+    "S": "B0F461B34X"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "425"
+  },
+  "price": {
+    "N": "14.99"
+  },
+  "publicationDate": {
+    "S": "April 7, 2025"
+  },
+  "publisher": {
+    "S": "N/A"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "King's Fall (Ard's Oath Book 6)"
+  },
+  "type": {
+    "S": "PAPERBACK"
+  },
+  "weight": {
+    "S": "1.5"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "6"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Bruce Sentar"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": "https://d1yas6jiqzshv2.cloudfront.net/covers/6/cover.png"
+  },
+  "coverUrlKey": {
+    "S": "covers/6/cover.png"
+  },
+  "dimensions": {
+    "S": "6 x 1.02 x 9"
+  },
+  "isbn": {
+    "S": "B09XZM7NR5"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "450"
+  },
+  "price": {
+    "N": "14.99"
+  },
+  "publicationDate": {
+    "S": "April 20, 2022"
+  },
+  "publisher": {
+    "S": "Independent"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "Saving Supervillains (Book 1)"
+  },
+  "type": {
+    "S": "PAPERBACK"
+  },
+  "weight": {
+    "S": "1.66"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "7"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Bruce Sentar"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": "https://d1yas6jiqzshv2.cloudfront.net/covers/7/cover.png"
+  },
+  "coverUrlKey": {
+    "S": "covers/7/cover.png"
+  },
+  "dimensions": {
+    "S": "N/A"
+  },
+  "isbn": {
+    "S": "979-8335810395"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "456"
+  },
+  "price": {
+    "N": "10.99"
+  },
+  "publicationDate": {
+    "S": "August 13, 2024"
+  },
+  "publisher": {
+    "S": "Independent"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "Drums of War (Ard's Oath Book 4)"
+  },
+  "type": {
+    "S": "EBOOK"
+  },
+  "weight": {
+    "S": "0.0"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+},
+
+{
+  "bookId": {
+    "S": "8"
+  },
+  "askingPrice": {
+    "N": "0"
+  },
+  "author": {
+    "S": "Bruce Sentar"
+  },
+  "condition": {
+    "S": "NEW"
+  },
+  "coverUrl": {
+    "S": "https://d1yas6jiqzshv2.cloudfront.net/covers/8/cover.png"
+  },
+  "coverUrlKey": {
+    "S": "covers/8/cover.png"
+  },
+  "dimensions": {
+    "S": "N/A"
+  },
+  "isbn": {
+    "S": "B0CHN6N2W8"
+  },
+  "language": {
+    "S": "English"
+  },
+  "pageCount": {
+    "N": "456"
+  },
+  "price": {
+    "N": "14.99"
+  },
+  "publicationDate": {
+    "S": "September 7, 2023"
+  },
+  "publisher": {
+    "S": "Independent"
+  },
+  "sizeUom": {
+    "S": "INCHES"
+  },
+  "status": {
+    "S": "AVAILABLE"
+  },
+  "title": {
+    "S": "Magic's Mantle (Ard's Oath Book 1)"
+  },
+  "type": {
+    "S": "EBOOK"
+  },
+  "weight": {
+    "S": "0.0"
+  },
+  "weightUom": {
+    "S": "POUNDS"
+  }
+}

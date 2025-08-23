@@ -4,7 +4,7 @@ import books.eda.example.dto.BookEvent;
 import books.eda.example.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
+import io.awspring.cloud.sqs.annotation.SqsListener;          // ✅ NEW package
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,28 +18,28 @@ public class BookSqsListeners {
     this.bookService = bookService;
   }
 
-  @SqsListener("${app.sqs.checkoutQueueUrl}")
+  @SqsListener("${app.sqs.checkoutQueueName}")
   public void handleCheckout(String message) throws Exception {
     if (bookService.isDirectDynamoUpdates()) return;  // extra safety
     BookEvent e = mapper.readValue(message, BookEvent.class);
     bookService.applyCheckoutEvent(e);
   }
 
-  @SqsListener("${app.sqs.buyQueueUrl}")
+  @SqsListener("${app.sqs.buyQueueName}")
   public void handleBuy(String message) throws Exception {
     if (bookService.isDirectDynamoUpdates()) return;
     BookEvent e = mapper.readValue(message, BookEvent.class);
     bookService.applyBuyEvent(e);
   }
 
-  @SqsListener("${app.sqs.returnQueueUrl}")
+  @SqsListener("${app.sqs.returnQueueName}")
   public void handleReturn(String message) throws Exception {
     if (bookService.isDirectDynamoUpdates()) return;
     BookEvent e = mapper.readValue(message, BookEvent.class);
     bookService.applyReturnEvent(e);
   }
 
-  @SqsListener("${app.sqs.sellQueueUrl}")
+  @SqsListener("${app.sqs.sellQueueName}")
   public void handleSell(String message) throws Exception {
     if (bookService.isDirectDynamoUpdates()) return;
     BookEvent e = mapper.readValue(message, BookEvent.class);
